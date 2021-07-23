@@ -1,0 +1,22 @@
+dataset: clinc150
+ood: ''
+intent_num: 150
+bert_path: 'pretrained/bert-base-uncased'
+batch_size: 128
+epoch: 100
+lr: 0.001
+bert_lr: 0.00001
+gpu: 6
+seed: 1111
+early_stop: 5
+
+timestamp: ''
+save_threshold: 99.0
+
+al_ratio: 0.1     # auxiliary loss ratio
+weight: 0         # weighted ood loss
+T: 1
+m_in: -8.
+m_out: -5.
+pretrained: ''
+

@@ -1,0 +1,16 @@
+dataset: 'clinc150'
+label_num: 150
+gpu: 3
+batch_size: 128
+sample_num: 100
+K: 2  # generate number at each replacement
+seed: 2222  # for sample
+
+masked_utt_name: 'masked_utts'
+suitable_name: 'suitable_candidates'
+relevance_name: 'relevance_candidates'
+all_ood_name: 'all_ood'
+ood_name: 'ood'
+
+gpt_path: 'pretrained/gpt2-base'
+bert_path: 'pretrained/bert-base-uncased'

@@ -1,0 +1,9 @@
+dataset: 'clinc150'
+gpu: 6
+seed: 1111
+batch_size: 128
+label_num: 150
+epoch: 10
+vocab_size: 50257
+label_embedding: 100
+gpt_path: 'pretrained/gpt2-base'

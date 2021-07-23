@@ -1,0 +1,12 @@
+dataset: 'clinc150'
+label_num: 150
+threshold: 150
+gpu: 6
+batch_size: 128
+
+cond_name: 'CondLM'
+llr_name: 'llr'
+word_score_name: 'word_score'
+masked_utt_name: 'masked_utts'
+
+gpt_path: 'pretrained/gpt2-base'
