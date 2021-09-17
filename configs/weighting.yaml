@@ -6,14 +6,13 @@ repeat: 1
 scale: 1000
 damp: 0.003
 recursion: -1
-param_path: 'output/params/clinc150/0.9092808120592845/params.pkl'
-aupr_out: 0.9092808120592845
+param_path: ''
+aupr_out: 0.0
 ratio: 0.1
 batch_size: 512  # for rep
 regenerate: 0
 seed: 2222
 
-# for parallel
 ith: 0
 split_num: 4
 
@@ -23,4 +22,4 @@ m_out: -5.
 
 gamma: 20
 
-option: 'prepare_s'  # prepare_s; cal_inf 
+option: 'prepare_s'  # prepare_s or cal_inf 

@@ -16,7 +16,9 @@ Other preparations:
 ## Usage
 Generate OOD utteranes:
 ```bash
-bash got.sh
+bash locating.sh
+bash generating.sh
+bash weighting.sh
 ```
 
 Run energy score:

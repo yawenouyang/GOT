@@ -73,7 +73,7 @@ class GeneratingModule():
 			token_logits = model(input).logits
 			mask_token_logits = token_logits[0, mask_token_index.item(), :]
 			mask_token_logits = torch.log_softmax(mask_token_logits, dim=0)
-			top_k = 10  # ensure the fluency of the generated sentences
+			top_k = 10  # to speed up, not necessary
 			top_k_tokens_logits = torch.topk(mask_token_logits, top_k, dim=0).values.tolist()
 			top_k_tokens = torch.topk(mask_token_logits, top_k, dim=0).indices.tolist()
 			top_k_tokens = [tokenizer.decode(token).replace(' ', '') for token in top_k_tokens]

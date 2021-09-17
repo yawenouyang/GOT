@@ -10,6 +10,7 @@ class WeightingModule():
 
     def __init__(self, config='configs/weighting.yaml'):
         self.args = load_args(config)
+        self.args.aupr_out = self.arg.param_path.split('/')[3]
         print(self.args)
 
         if not os.path.isdir('output/weighting/{}'.format(self.args.dataset)):
@@ -100,9 +101,6 @@ if __name__ == '__main__':
     reps = w.get_rep()
     mlp = w.init_MLP()
 
-    # test mlp and rep
-    # w.test_mlp(mlp, reps)
-    # test end
     inf = InF(w.args, mlp, reps)
 
     if w.args.option == 'prepare_s':

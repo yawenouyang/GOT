@@ -60,7 +60,6 @@ class InF():
         self.loaders['merge'] = torch.utils.data.DataLoader(dataset=merge_dataset, batch_size=1, shuffle=False, drop_last=False)
 
     def cal_s(self):
-
         if len(os.listdir(self.s_dir)) == len(self.loaders['valid'].dataset.y):
             print('{} has been calculated'.format(self.s_dir))
         else:

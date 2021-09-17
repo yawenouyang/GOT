@@ -76,7 +76,7 @@ class LocatingModule():
                     if text[0] not in summary:
                         summary[text[0]]={}
                     for j, w in enumerate(text[1:]):
-                        if w in en_stopwords:
+                        if w in en_stopwords:  # not necessary
                             continue
                         if w not in summary[text[0]]:
                             summary[text[0]][w]=score[j]
