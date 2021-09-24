@@ -14,6 +14,12 @@ Other preparations:
 
 
 ## Usage
+
+Unknown intent detection:
+```bash
+bash train.sh
+```
+
 Generate OOD utteranes:
 ```bash
 bash locating.sh
@@ -21,9 +27,23 @@ bash generating.sh
 bash weighting.sh
 ```
 
-Run energy score:
-```bash
-bash train.sh
+## Citation
+```bibtex
+@inproceedings{ouyang-etal-2021-energy,
+    title = "Energy-based Unknown Intent Detection with Data Manipulation",
+    author = "Ouyang, Yawen  and
+      Ye, Jiasheng  and
+      Chen, Yu  and
+      Dai, Xinyu  and
+      Huang, Shujian  and
+      Chen, Jiajun",
+    booktitle = "Findings of the Association for Computational Linguistics: ACL-IJCNLP 2021",
+    month = aug,
+    year = "2021",
+    address = "Online",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2021.findings-acl.252",
+    doi = "10.18653/v1/2021.findings-acl.252",
+    pages = "2852--2861",
+}
 ```
-
-Enjoy :)
