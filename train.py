@@ -32,7 +32,7 @@ class Train():
 
         self.mdl = Classifier(self.args).to(self.args.device)
         if self.args.pretrained != '':
-            model_param = torch.load(self.args.pretrained, map_location='cuda: {}'.format(self.args.gpu) if self.args.gpu != -1 else 'cpu')
+            model_param = torch.load(self.args.pretrained, map_location='cuda:{}'.format(self.args.gpu) if self.args.gpu != -1 else 'cpu')
             self.mdl.load_state_dict(model_param)
 
         self.criterion = nn.CrossEntropyLoss()

@@ -6,7 +6,7 @@ class ConditionalLM(nn.Module):
     def __init__(self, gpu, dataset, label_num, fix_word_embedding=False):
         super().__init__()
         pre_embedding = torch.load('output/params/{}/embedding'.format(dataset),\
-            map_location='cuda: {}'.format(gpu) if gpu != -1 else 'cpu')
+            map_location='cuda:{}'.format(gpu) if gpu != -1 else 'cpu')
         vocab_size, word_dim = pre_embedding.shape
         self.word_embed = nn.Embedding(vocab_size, word_dim)
         self.word_embed.weight.data = pre_embedding

@@ -143,7 +143,7 @@ class InF():
             s_avgs = {}
             for index, (x, y) in enumerate(self.loaders['valid']):
                 s_test = torch.load('{}/{}'.format(self.s_dir, index), \
-                    map_location='cuda: {}'.format(self.args.gpu) if self.args.gpu != -1 else 'cpu')
+                    map_location='cuda:{}'.format(self.args.gpu) if self.args.gpu != -1 else 'cpu')
                 if index % per_intent_num == 0:
                     s_avg = s_test
                 elif (index + 1) % per_intent_num == 0:

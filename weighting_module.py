@@ -26,7 +26,7 @@ class WeightingModule():
             os.mkdir('output/weighting/{}/rep/{}'.format(self.args.dataset, self.args.aupr_out))
 
         
-        self.model_param = torch.load(self.args.param_path, map_location='cuda: {}'.format(self.args.gpu) \
+        self.model_param = torch.load(self.args.param_path, map_location='cuda:{}'.format(self.args.gpu) \
             if self.args.gpu != -1 else 'cpu')
         self.mdl_initialized = False
 

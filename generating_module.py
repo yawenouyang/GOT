@@ -98,7 +98,7 @@ class GeneratingModule():
 		
 		clm = ConditionalLM(self.args.gpu, self.args.dataset, self.args.label_num).to(self.args.device)
 		clm.load_state_dict(torch.load('output/params/{}/CondLM.pt'.format(self.args.dataset), \
-            map_location='cuda: {}'.format(self.args.gpu) if self.args.gpu != -1 else 'cpu'))
+            map_location='cuda:{}'.format(self.args.gpu) if self.args.gpu != -1 else 'cpu'))
 		
 		tokenizer = AutoTokenizer.from_pretrained(self.args.gpt_path)
 		tokenizer.pad_token = tokenizer.eos_token

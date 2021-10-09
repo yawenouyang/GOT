@@ -13,7 +13,6 @@ import json
 from tqdm import tqdm
 import os
 
-en_stopwords = list(stopwords.words('english'))
 
 class LocatingModule():
 
@@ -39,40 +38,75 @@ class LocatingModule():
                     intent_related_words[intent].append(score[0])
         return intent_related_words
 
+    def token_score_to_word_score(self, utt, score):
+        m_score = []  
+        # score = [float(ts) for ts in scores[i].split(' ')[1:]]  # ts: token score
+        utt_tokens_with_space = utt.split(' ')
+        with_space_index = 0
+        utt_tokens_without_space = utt.split()
+        score_index = 0
+        m_score = []  # merge score
+        for index, token in enumerate(utt_tokens_without_space):
+            if index == 0:
+                length = len(self.tokenizer.tokenize(token))
+                with_space_index += 1
+            else:
+                if utt_tokens_with_space[with_space_index] == '':
+                    with_space_index += 2
+                    length = len(self.tokenizer.tokenize('one  ' + token)) - 1
+                else:
+                    with_space_index += 1
+                    length = len(self.tokenizer.tokenize('one ' + token)) - 1
+
+            tmp = 0
+            for i in range(score_index, score_index + length):
+                tmp += score[i]
+            score_index += length
+            m_score.append(tmp)
+        assert len(m_score) == len(utt_tokens_without_space)
+        # m_scores.append(' '.join([str(ts)[:5] if len(str(ts)) >= 5 else str(ts) + '0' * (5 - len(str(ts))) for ts in m_score]))
+        return m_score
+
     @torch.no_grad()
     def generate_word_score(self):
 
+        output = 'output/locating/{}/{}.txt'.format(self.args.dataset, self.args.llr_name)
+        delimiter = '##'
+        
         gpt2 = GPT2LMHeadModel.from_pretrained(self.args.gpt_path, return_dict=True).to(self.args.device)
         clm = ConditionalLM(self.args.gpu, self.args.dataset, self.args.label_num).to(self.args.device)
         clm.load_state_dict(torch.load('output/params/{}/{}.pt'.format(self.args.dataset, self.args.cond_name), \
-            map_location='cuda: {}'.format(self.args.gpu) if self.args.gpu != -1 else 'cpu'))
+            map_location='cuda:{}'.format(self.args.gpu) if self.args.gpu != -1 else 'cpu'))
         
         gpt2.eval()
         clm.eval()
 
-        self.tokenizer = init_tokenizer(self.args.gpt_path)
         train_loader = self.create_loader(self.args.train, False)
 
-        output = 'output/locating/{}/{}.csv'.format(self.args.dataset, self.args.llr_name)
-
-        with open(output, "w", encoding='utf-8') as f:
-            for X_in, X_out, mask, length, y, intent in tqdm(train_loader):
+        with open(output, 'w', encoding='utf-8') as f:
+            for X_in, X_out, mask, lengths, y, intents in tqdm(train_loader):
                 logProb_Cond = compute_logProb(X_out, clm(X_in, y))
                 logProb = compute_logProb(X_out, gpt2(input_ids=X_in, attention_mask=mask).logits)
-                llr = logProb_Cond - logProb
-                for x, ratio, label in zip(X_out, llr, intent):
-                    f.write("{},".format(label))
-                    f.write(",".join(self.tokenizer.batch_decode(x.reshape(1,-1))[0].replace("<|endoftext|>","").split()))
-                    f.write("\n,"+ ",".join([str(r.item()) for r in ratio])+ "\n")
+                llrs = logProb_Cond - logProb
+                for x, llr, intent, length in zip(X_out, llrs, intents, lengths):
+                    f.write("{}{}".format(intent, delimiter))
+                    x = self.tokenizer.batch_decode(x.reshape(1,-1))[0].replace("<|endoftext|>","")
+                    x_word = x.split()
+                    x_token_llrs = [r.item() for r in llr[:length]]
+                    x_word_scores = self.token_score_to_word_score(x, x_token_llrs)
+                    assert len(x_word) == len(x_word_scores)
+                    f.write(delimiter.join(x_word))
+                    f.write("\n{}".format(delimiter)+ delimiter.join([str(s) for s in x_word_scores])+ "\n")
 
+        en_stopwords = list(stopwords.words('english'))
         summary = {}
         with open(output) as f:
             for i, line in enumerate(f):
                 line = line.strip()
                 if i % 2 == 0:
-                    text = line.split(',')
+                    text = line.split(delimiter)
                 else:
-                    score = list(map(float, line.split(',')[1:]))
+                    score = list(map(float, line.split(delimiter)[1:]))
                     if text[0] not in summary:
                         summary[text[0]]={}
                     for j, w in enumerate(text[1:]):
@@ -89,7 +123,6 @@ class LocatingModule():
 
         with open('output/locating/{}/{}.json'.format(self.args.dataset, self.args.word_score_name), 'w') as f:
             json.dump(summary, f, indent=4)
-        
 
     def create_loader(self, file_name, shuffle):
         dataset = CLMDataset(file_name, self.tokenizer, self.args.device)
