@@ -21,6 +21,7 @@ class LocatingModule():
         print(self.args)
         if not os.path.isdir('output/locating/{}'.format(self.args.dataset)):
             os.mkdir('output/locating/{}'.format(self.args.dataset))
+        self.tokenizer = init_tokenizer(self.args.gpt_path)
             
     def load_utt_intent(self, fname):
         df = pd.read_csv(fname)

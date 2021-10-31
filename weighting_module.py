@@ -10,7 +10,7 @@ class WeightingModule():
 
     def __init__(self, config='configs/weighting.yaml'):
         self.args = load_args(config)
-        self.args.aupr_out = self.arg.param_path.split('/')[3]
+        self.args.aupr_out = self.args.param_path.split('/')[3]
         print(self.args)
 
         if not os.path.isdir('output/weighting/{}'.format(self.args.dataset)):
